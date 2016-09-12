@@ -67,7 +67,7 @@ survey_data = datasets['survey_data']
 #**********************************
 
 # create correlation matrix
-corr_data = data.copy()
+corr_data = task_data.copy()
 corr_data.drop(['ptid','gender','age'], axis=1, inplace=True)
 corr_mat = corr_data.corr().as_matrix()
 # remove diagnoal (required by bct) and uppder triangle
@@ -89,6 +89,7 @@ adj = np.ceil(thresh_mat)
 # make a binary graph
 G_bin = igraph.Graph.Adjacency(adj.tolist(), mode = 'undirected')
 G_bin.vs['name'] = corr_data.columns
+layout = G_bin.layout('kk')
 
 # simulate random graphs with same number of nodes and edges
 sim_out = simulate(rep = 10000, fun = lambda: gen_random_graph(n = len(G_bin.vs), m = len(G_bin.es)))
@@ -112,7 +113,7 @@ G_bin.vs['part_coef'] = part_coef
 color_palette = sns.color_palette('hls', np.max(comm))
 color_dict = {i+1:color_palette[i] for i in range(np.max(comm))}
 community_color = [color_dict[v] for v in G_bin.vs['community']]
-visual_style = {'layout': 'kk', 'vertex_color': community_color, 'vertex_size': [p*60 for p in part_coef]}
+visual_style = {'layout': layout, 'vertex_color': community_color, 'vertex_size': [p*40+10 for p in part_coef]}
 plot_graph(G_bin, visual_style = visual_style)
 print_community_members(G_bin)
 
@@ -127,9 +128,20 @@ provinicial_hubs = G_bin.vs.select(lambda v: v['hub'] == True and v['part_coef']
 #**********************************
 # Weighted Analysis
 #**********************************
-G_weighted = igraph.Graph.Weighted_Adjacency(thresh_adj.tolist(), mode="undirected")
+G_weighted = igraph.Graph.Weighted_Adjacency(thresh_mat.tolist(), mode="undirected")
 G_weighted.vs['name'] = corr_data.columns
 
+# community detection
+# using louvain but also bct.modularity_und which is "Newman's spectral community detection"
+comm, mod = bct.community_louvain(thresh_mat)
+G_weighted.vs['community'] = comm
+community_color = [color_dict[v] for v in G_weighted.vs['community']]
+part_coef = bct.participation_coef(adj, comm)
+G_weighted.vs['part_coef'] = part_coef
+
+visual_style = {'layout': layout, 'vertex_color': community_color, 'vertex_size': [p*40+10 for p in part_coef], 'edge_width': [w*4 for w in G_weighted.es['weight']]}
+plot_graph(G_weighted, visual_style = visual_style)
+print_community_members(G_weighted)
 
 
 
