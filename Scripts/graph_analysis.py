@@ -28,13 +28,13 @@ def simulate(rep = 1000, fun = lambda: gen_random_graph(100,100)):
         output.append(fun())
     return output
         
-def plot_graph(G, visual_style = None):
+def plot_graph(G, visual_style = None, inline = True):
     if not visual_style:
         visual_style = {}
         if 'weight' in G.es:
             visual_style['edge_width'] = [10 * weight for weight in G.es['weight']]
         visual_style['layout'] = G_bin.layout("kk")
-    fig = igraph.plot(G, **visual_style)
+    fig = igraph.plot(G, inline = inline, **visual_style)
     return fig
 
 def plot_mat(mat, labels = []):
@@ -45,11 +45,24 @@ def plot_mat(mat, labels = []):
         ax.set_yticklabels(labels, rotation = 0, fontsize = 'large')
     return fig
     
-def print_community_members(G):
-    for community in np.unique(G_bin.vs['community']):
-        members = [v['name'] for v in G_bin.vs if v['community'] == community]
+def print_community_members(G, lookup = {}):
+    assert set(['community','id','within_module_degree','name']) <  set(G.vs.attribute_names()), \
+        "Missing some required vertex attributes. Vertices must have id, name, community and within_module_degree"
+        
+    print('Key: Node index, Within Module Degree, Measure, Degree')
+    for community in np.unique(G.vs['community']):
+        #find members
+        members = [lookup.get(v['name'],v['name']) for v in G.vs if v['community'] == community]
+        # ids and total degree
+        ids = [v['id'] for v in G.vs if v['community'] == community]
+        degrees = [v.degree() for v in G.vs if v['community'] == community]
+        #sort by within degree
+        within_degrees = [round(v['within_module_degree'],3) for v in G.vs if v['community'] == community]
+        to_print = zip(ids, within_degrees, members, degrees)
+        to_print.sort(key = lambda x: -x[1])
+        
         print('Members of community ' + str(community) + ':')
-        pprint(members)
+        pprint(to_print)
         print('')
         
     
@@ -61,13 +74,14 @@ datasets = pickle.load(open('../Data/subset_data.pkl','r'))
 data = datasets['all_data']
 task_data = datasets['task_data']
 survey_data = datasets['survey_data']
+verbose_lookup = datasets['verbose_lookup']
 
 #**********************************
 # Prepare adjacency matrix
 #**********************************
 
 # create correlation matrix
-corr_data = task_data.copy()
+corr_data = data.copy()
 corr_data.drop(['ptid','gender','age'], axis=1, inplace=True)
 corr_mat = corr_data.corr().as_matrix()
 # remove diagnoal (required by bct) and uppder triangle
@@ -88,6 +102,7 @@ adj = np.ceil(thresh_mat)
 
 # make a binary graph
 G_bin = igraph.Graph.Adjacency(adj.tolist(), mode = 'undirected')
+G_bin.vs['id'] = range(len(G_bin.vs))
 G_bin.vs['name'] = corr_data.columns
 layout = G_bin.layout('kk')
 
@@ -106,6 +121,8 @@ sigma = gamma/lam
 # using louvain but also bct.modularity_und which is "Newman's spectral community detection"
 comm, mod = bct.community_louvain(adj)
 G_bin.vs['community'] = comm
+within_module_degree = bct.module_degree_zscore(adj,comm)
+G_bin.vs['within_module_degree'] = within_module_degree
 part_coef = bct.participation_coef(adj, comm)
 G_bin.vs['part_coef'] = part_coef
 
@@ -113,9 +130,15 @@ G_bin.vs['part_coef'] = part_coef
 color_palette = sns.color_palette('hls', np.max(comm))
 color_dict = {i+1:color_palette[i] for i in range(np.max(comm))}
 community_color = [color_dict[v] for v in G_bin.vs['community']]
-visual_style = {'layout': layout, 'vertex_color': community_color, 'vertex_size': [p*40+10 for p in part_coef]}
+visual_style = {'layout': layout, 
+                'vertex_color': community_color, 
+                'vertex_label': G_bin.vs['id'],
+                'vertex_label_size': 20,
+                'vertex_size': [p*40+10 for p in part_coef],
+                'bbox': (1000,1000),
+                'margin': 50}
 plot_graph(G_bin, visual_style = visual_style)
-print_community_members(G_bin)
+print_community_members(G_bin, lookup = verbose_lookup)
 
 # Hubs
 # get "high degree" threshold = 1 std above mean degree
@@ -129,19 +152,30 @@ provinicial_hubs = G_bin.vs.select(lambda v: v['hub'] == True and v['part_coef']
 # Weighted Analysis
 #**********************************
 G_weighted = igraph.Graph.Weighted_Adjacency(thresh_mat.tolist(), mode="undirected")
+G_weighted.vs['id'] = range(len(G_weighted.vs))
 G_weighted.vs['name'] = corr_data.columns
 
 # community detection
 # using louvain but also bct.modularity_und which is "Newman's spectral community detection"
 comm, mod = bct.community_louvain(thresh_mat)
 G_weighted.vs['community'] = comm
-community_color = [color_dict[v] for v in G_weighted.vs['community']]
+within_module_degree = bct.module_degree_zscore(thresh_mat,comm)
+G_weighted.vs['within_module_degree'] = within_module_degree
 part_coef = bct.participation_coef(adj, comm)
 G_weighted.vs['part_coef'] = part_coef
 
-visual_style = {'layout': layout, 'vertex_color': community_color, 'vertex_size': [p*40+10 for p in part_coef], 'edge_width': [w*4 for w in G_weighted.es['weight']]}
-plot_graph(G_weighted, visual_style = visual_style)
-print_community_members(G_weighted)
+community_color = [color_dict[v] for v in G_weighted.vs['community']]
+
+visual_style = {'layout': layout, 
+                'vertex_color': community_color, 
+                'vertex_size': [p*40+10 for p in part_coef], 
+                'vertex_label': G_weighted.vs['id'],
+                'vertex_label_size': 20,
+                'edge_width': [w*4 for w in G_weighted.es['weight']],
+                'bbox': (1000,1000),
+                'margin': 50}
+plot_graph(G_weighted, visual_style = visual_style, inline = False)
+print_community_members(G_weighted, lookup = verbose_lookup)
 
 
 
