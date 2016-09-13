@@ -138,9 +138,9 @@ verbose_dict= {
     'T.ts_interference': 'TS conflict effect',
     'T.vcap_max_capac': 'Verbal WM capacity',
     'T.vmnm_main_mn': 'Verbal Memory and Manipulation: Maintenance accuracy',
-    'T.vmnm_main_mdrt': 'VerbalMemory and Manipulation: Maintenance RT',
+    'T.vmnm_main_mdrt': 'Verbal Memory and Manipulation: Maintenance RT',
     'T.vmnm_manip_mn': 'Verbal Memory and Manipulation: Manipulation accuracy',
-    'T.vmnm_manip_mdrt': 'VerbalMemory and Manipulation: Manipulation RT'
+    'T.vmnm_manip_mdrt': 'Verbal Memory and Manipulation: Manipulation RT'
 }
 
 
@@ -155,6 +155,7 @@ data.loc[:,'scwt_conflict_acc_effect'] = data.loc[:,'scwt_conflict_acc_effect'] 
 data.loc[:,'ant_conflict_acc_effect'] = data.loc[:,'ant_conflict_acc_effect'] * -1
 data.loc[:,'sr_rec_explicitlearning_rt'] = data.loc[:,'sr_rec_explicitlearning_rt'] * -1
 data.loc[:,'sr_enc_priming_rt'] = data.loc[:,'sr_enc_priming_rt'] * -1
+data.loc[:,'cpt_fa'] = data.loc[:,'cpt_fa'] * -1
 
 # do some useful renaming
 data = data.rename(columns = rename_dict)
