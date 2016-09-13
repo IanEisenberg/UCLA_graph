@@ -206,7 +206,7 @@ provinicial_hubs = G.vs.select(lambda v: v['hub'] == True and v['part_coef'] <= 
 #**********************************
 # Weighted Analysis
 #**********************************    
-G_w, connectivity_mat = Graph_Analysis(corr_data, threshold = .3, weight = True, reorder = True)
+G_w, connectivity_mat = Graph_Analysis(corr_data, threshold = .29, weight = True, reorder = True)
 Sigma, Gamma, Lambda = calc_small_world(G)
 
 
