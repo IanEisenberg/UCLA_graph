@@ -82,7 +82,7 @@ def print_community_members(G, lookup = {}):
 
 # Main graph analysis function
 def Graph_Analysis(data, threshold = .3, weight = True, layout = 'kk', reorder = True, display = True, filey = None):
-    connectivity_matrix = data.corr().as_matrix()
+    connectivity_matrix = data.corr(method = 'spearman').as_matrix()
     # remove diagnoal (required by bct) and uppder triangle
     np.fill_diagonal(connectivity_matrix,0)
     
@@ -97,6 +97,7 @@ def Graph_Analysis(data, threshold = .3, weight = True, layout = 'kk', reorder =
 
     # community detection
     # using louvain but also bct.modularity_und which is "Newman's spectral community detection"
+    # bct.modularity_louvain_und_sign
     comm, mod = bct.community_louvain(graph_mat)
     
     #if reorder, reorder vertices by community membership
@@ -190,7 +191,7 @@ abs_mat = np.abs(corr_mat)
 #**********************************
 # Binary Analysis
 #**********************************
-G_bin, connectivity_adj = Graph_Analysis(corr_data, weight = False, layout = 'kk')
+G_bin, connectivity_adj = Graph_Analysis(corr_data, weight = False, layout = 'kk', filey = '/home/ian/tmp/graph.pdf')
 Sigma, Gamma, Lambda = calc_small_world(G)
 
 
