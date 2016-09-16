@@ -166,4 +166,4 @@ task_data = data.drop(data.columns[data.columns.str.contains('S.')], axis = 1)
 
 
 data = {'all_data': data, 'survey_data': survey_data, 'task_data': task_data, 'verbose_lookup': verbose_dict}
-pickle.dump(data,open('../Data/subset_data.pkl', 'wb'))
+pickle.dump(data,open('../Data/subset_data.pkl', 'wb'), protocol = 2)

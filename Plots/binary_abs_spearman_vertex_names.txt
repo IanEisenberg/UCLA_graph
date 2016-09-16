@@ -1,0 +1,209 @@
+Key: Node index, Within Module Degree, Measure, Eigenvector centrality
+Members of community 1:
+[(1, '1.18', 'Verbal Memory and Manipulation: Manipulation accuracy', '0.15'),
+ (3, '1.18', 'Verbal WM capacity', '0.09'),
+ (8, '0.91', 'Spatial WM capacity', '0.07'),
+ (16, '0.91', 'Verbal Learning Test recall trials 1-5', '0.10'),
+ (17, '0.91', 'Verbal Learning Test interference list recall', '0.07'),
+ (2, '0.64', 'Verbal Memory and Manipulation: Maintenance accuracy', '0.06'),
+ (6, '0.64', 'Spatial Memory and Manipulation: Manipulation accuracy', '0.10'),
+ (7, '0.64', 'Spatial Memory and Manipulation: Maintenance accuracy', '0.06'),
+ (9, '0.36', 'CPT - hits', '0.05'),
+ (14, '0.36', "CPT d'. P(Hits)-P(FA)", '0.07'),
+ (0, '0.09', 'BART - pumps', '0.16'),
+ (10, '-0.18', 'CPT - False Alarms', '0.18'),
+ (12,
+  '-0.73',
+  'Temperament and Character Inventory: Reward Dependence',
+  '0.10'),
+ (15, '-0.73', 'Dickman functional impulsivity', '0.24'),
+ (11, '-1.00', 'Eysenck: Venturesome', '0.27'),
+ (5, '-1.55', 'Scene recognition: Explicit learning rt', '0.06'),
+ (13, '-1.55', 'Temperament and Character Inventory: Persistence', '0.07'),
+ (4, '-2.09', 'Scene recognition: implicit learning accuracy', '0.01')]
+
+Members of community 2:
+[(19, '0.90', 'BIS_cognitive_impulsivity', '0.68'),
+ (22, '0.90', 'Chapman perceptual abberation', '1.00'),
+ (26, '0.90', 'Dickman dysfunctional impulsivity', '0.94'),
+ (28, '0.90', 'Hopkins Somatization', '0.92'),
+ (18, '0.52', 'Hopkins Intsensivitiy', '0.78'),
+ (25, '0.52', 'Hopkins Obsessive compulsive', '0.79'),
+ (29, '0.52', 'Hopkins Depression', '0.78'),
+ (30, '0.52', 'Hopkins Anxiety', '0.94'),
+ (35, '0.52', 'Eysenck: Impulsivity', '0.88'),
+ (24, '0.13', 'Chapman social anhedonia', '0.81'),
+ (34, '0.13', 'Adult ADHD Scale', '0.63'),
+ (20, '-0.26', 'BIS_behavioral_impulsivity', '0.63'),
+ (21, '-0.26', 'Chapman hypomania', '0.65'),
+ (33, '-0.26', 'Eysenck: Empathy', '0.61'),
+ (31, '-0.65', 'Temperament and Character Inventory: Novely Seeking', '0.57'),
+ (32, '-0.65', 'Temperament and Character Inventory: Harm Avoidance', '0.76'),
+ (23, '-1.03', 'Chapman physical anhedonia', '0.86'),
+ (27, '-3.36', 'Stroop accuracy effect', '0.33')]
+
+Members of community 3:
+[(36, '1.34', 'Color trails time 1: Speed of processing', '0.84'),
+ (37, '1.06', 'Verbal Memory and Manipulation: Maintenance RT', '0.55'),
+ (38, '1.06', 'Color trails time 2: Speed of processing', '0.91'),
+ (46, '1.06', 'Verbal Memory and Manipulation: Manipulation RT', '0.54'),
+ (50, '1.06', 'SpatialMemory and Manipulation: Maintenance RT', '0.61'),
+ (48, '0.77', 'Spatial Memory and Manipulation: Manipulation RT', '0.46'),
+ (40, '0.49', 'TS conflict effect', '0.88'),
+ (52, '0.20', 'ANT - Conflict RT effect', '0.68'),
+ (41, '-0.08', 'Task switch Cost short interval', '0.35'),
+ (51, '-0.08', 'Stroop RT effect', '0.41'),
+ (42, '-0.37', 'Task switch Cost long interval', '0.32'),
+ (43, '-0.37', 'Stop signal SSRT', '0.52'),
+ (45, '-0.37', 'Chapman infrequency', '0.62'),
+ (39, '-0.94', 'DDT discount rate', '0.67'),
+ (44, '-1.22', 'Scene recognition: implicit learning rt', '0.23'),
+ (49, '-1.22', 'ANT - Conflict Accuracy effect', '0.24'),
+ (47, '-2.36', 'Scene recognition: Explicit learning accuracy', '0.12')]
+
+Key: Node index, Within Module Degree, Measure, Eigenvector centrality
+Members of community 1:
+[(12, '0.98', 'Dickman dysfunctional impulsivity', '0.98'),
+ (15, '0.98', 'Chapman hypomania', '0.73'),
+ (1, '0.55', 'Eysenck: Impulsivity', '0.87'),
+ (6, '0.55', 'Hopkins Depression', '0.57'),
+ (7, '0.55', 'Hopkins Intsensivitiy', '0.57'),
+ (8, '0.55', 'Hopkins Obsessive compulsive', '0.57'),
+ (9, '0.55', 'Hopkins Somatization', '0.57'),
+ (11, '0.55', 'Hopkins Anxiety', '0.61'),
+ (14, '0.55', 'Chapman perceptual abberation', '0.97'),
+ (17, '0.55', 'BIS_cognitive_impulsivity', '0.62'),
+ (0, '0.11', 'Adult ADHD Scale', '0.55'),
+ (2, '0.11', 'Eysenck: Empathy', '0.64'),
+ (10, '0.11', 'Temperament and Character Inventory: Harm Avoidance', '0.63'),
+ (13, '0.11', 'Chapman social anhedonia', '0.88'),
+ (16, '-0.32', 'BIS_behavioral_impulsivity', '0.87'),
+ (4, '-0.75', 'Temperament and Character Inventory: Persistence', '0.55'),
+ (5, '-1.18', 'Temperament and Character Inventory: Novely Seeking', '0.53'),
+ (18, '-1.18', 'Dickman functional impulsivity', '0.58'),
+ (3,
+  '-3.34',
+  'Temperament and Character Inventory: Reward Dependence',
+  '0.50')]
+
+Members of community 2:
+[(19, '0.00', 'ANT - Conflict Accuracy effect', '0.00')]
+
+Members of community 3:
+[(20, '0.00', 'ANT - Conflict RT effect', '0.00')]
+
+Members of community 4:
+[(21, '0.00', 'Scene recognition: Explicit learning accuracy', '0.00'),
+ (22, '0.00', 'Scene recognition: Explicit learning rt', '0.02')]
+
+Members of community 5:
+[(46, '2.01', 'Color trails time 2: Speed of processing', '1.00'),
+ (30, '1.49', 'Verbal Memory and Manipulation: Maintenance RT', '0.74'),
+ (45, '1.49', 'Color trails time 1: Speed of processing', '0.91'),
+ (43, '1.15', 'Spatial Memory and Manipulation: Maintenance accuracy', '0.75'),
+ (28, '0.98', 'Verbal Memory and Manipulation: Manipulation accuracy', '0.82'),
+ (32, '0.81', 'Verbal WM capacity', '0.79'),
+ (31, '0.63', 'Verbal Memory and Manipulation: Maintenance accuracy', '0.81'),
+ (34, '0.46', 'SpatialMemory and Manipulation: Maintenance RT', '0.52'),
+ (39, '0.46', 'Verbal Learning Test recall trials 1-5', '0.76'),
+ (40, '0.46', 'Verbal Learning Test interference list recall', '0.81'),
+ (42, '0.46', 'Verbal Memory and Manipulation: Manipulation RT', '0.57'),
+ (50, '0.46', 'CPT - hits', '0.68'),
+ (29,
+  '0.29',
+  'Spatial Memory and Manipulation: Manipulation accuracy',
+  '0.59'),
+ (23, '0.12', 'Spatial Memory and Manipulation: Manipulation RT', '0.39'),
+ (25, '0.12', 'Stop signal SSRT', '0.49'),
+ (37, '0.12', 'Chapman infrequency', '0.79'),
+ (38, '0.12', 'Chapman physical anhedonia', '0.93'),
+ (51, '-0.05', "CPT d'. P(Hits)-P(FA)", '0.66'),
+ (35, '-0.23', 'BART - pumps', '0.53'),
+ (48, '-0.23', 'Spatial WM capacity', '0.47'),
+ (41, '-0.57', 'Eysenck: Venturesome', '0.62'),
+ (33, '-0.74', 'Task switch Cost short interval', '0.26'),
+ (36, '-0.74', 'Stroop RT effect', '0.23'),
+ (44, '-1.08', 'CPT - False Alarms', '0.45'),
+ (47, '-1.08', 'DDT discount rate', '0.42'),
+ (26, '-1.43', 'Task switch Cost long interval', '0.17'),
+ (24, '-1.77', 'Scene recognition: implicit learning rt', '0.08'),
+ (49, '-1.77', 'Stroop accuracy effect', '0.07'),
+ (27, '-1.94', 'TS conflict effect', '0.06')]
+
+Members of community 6:
+[(52, '0.00', 'Scene recognition: implicit learning accuracy', '0.00')]
+
+Key: Node index, Within Module Degree, Measure, Eigenvector centrality
+Members of community 1:
+[(3, '0.98', 'Chapman hypomania', '0.73'),
+ (10, '0.98', 'Dickman dysfunctional impulsivity', '0.98'),
+ (1, '0.55', 'BIS_cognitive_impulsivity', '0.62'),
+ (5, '0.55', 'Chapman perceptual abberation', '0.97'),
+ (13, '0.55', 'Hopkins Somatization', '0.57'),
+ (14, '0.55', 'Hopkins Obsessive compulsive', '0.57'),
+ (15, '0.55', 'Hopkins Intsensivitiy', '0.57'),
+ (16, '0.55', 'Hopkins Depression', '0.57'),
+ (17, '0.55', 'Hopkins Anxiety', '0.61'),
+ (22, '0.55', 'Eysenck: Impulsivity', '0.87'),
+ (0, '0.11', 'Adult ADHD Scale', '0.55'),
+ (7, '0.11', 'Chapman social anhedonia', '0.88'),
+ (12, '0.11', 'Temperament and Character Inventory: Harm Avoidance', '0.63'),
+ (21, '0.11', 'Eysenck: Empathy', '0.64'),
+ (2, '-0.32', 'BIS_behavioral_impulsivity', '0.87'),
+ (19, '-0.75', 'Temperament and Character Inventory: Persistence', '0.55'),
+ (11, '-1.18', 'Dickman functional impulsivity', '0.58'),
+ (18, '-1.18', 'Temperament and Character Inventory: Novely Seeking', '0.53'),
+ (20,
+  '-3.34',
+  'Temperament and Character Inventory: Reward Dependence',
+  '0.50')]
+
+Members of community 2:
+[(24, '0.00', 'ANT - Conflict Accuracy effect', '0.00')]
+
+Members of community 3:
+[(25, '0.00', 'ANT - Conflict RT effect', '0.00')]
+
+Members of community 4:
+[(27, '1.00', 'CPT - False Alarms', '0.45'),
+ (52, '1.00', "CPT d'. P(Hits)-P(FA)", '0.66'),
+ (23, '-1.00', 'Eysenck: Venturesome', '0.62'),
+ (33, '-1.00', 'Stroop accuracy effect', '0.07')]
+
+Members of community 5:
+[(39, '0.00', 'Scene recognition: Explicit learning accuracy', '0.00'),
+ (40, '0.00', 'Scene recognition: Explicit learning rt', '0.02')]
+
+Members of community 6:
+[(41, '0.00', 'Scene recognition: implicit learning accuracy', '0.00')]
+
+Members of community 7:
+[(30, '1.87', 'Color trails time 2: Speed of processing', '1.00'),
+ (29, '1.49', 'Color trails time 1: Speed of processing', '0.91'),
+ (49, '1.49', 'Verbal Memory and Manipulation: Maintenance RT', '0.74'),
+ (35, '0.92', 'Spatial Memory and Manipulation: Maintenance accuracy', '0.75'),
+ (50, '0.92', 'Verbal Memory and Manipulation: Manipulation accuracy', '0.82'),
+ (47, '0.54', 'Verbal WM capacity', '0.79'),
+ (51, '0.54', 'Verbal Memory and Manipulation: Manipulation RT', '0.57'),
+ (8, '0.34', 'Verbal Learning Test recall trials 1-5', '0.76'),
+ (9, '0.34', 'Verbal Learning Test interference list recall', '0.81'),
+ (36, '0.34', 'SpatialMemory and Manipulation: Maintenance RT', '0.52'),
+ (48, '0.34', 'Verbal Memory and Manipulation: Maintenance accuracy', '0.81'),
+ (4, '0.15', 'Chapman infrequency', '0.79'),
+ (28, '0.15', 'CPT - hits', '0.68'),
+ (37,
+  '0.15',
+  'Spatial Memory and Manipulation: Manipulation accuracy',
+  '0.59'),
+ (6, '-0.04', 'Chapman physical anhedonia', '0.93'),
+ (38, '-0.04', 'Spatial Memory and Manipulation: Manipulation RT', '0.39'),
+ (43, '-0.04', 'Stop signal SSRT', '0.49'),
+ (26, '-0.42', 'BART - pumps', '0.53'),
+ (32, '-0.42', 'Spatial WM capacity', '0.47'),
+ (45, '-0.80', 'Task switch Cost short interval', '0.26'),
+ (34, '-0.99', 'Stroop RT effect', '0.23'),
+ (31, '-1.19', 'DDT discount rate', '0.42'),
+ (44, '-1.57', 'Task switch Cost long interval', '0.17'),
+ (42, '-1.95', 'Scene recognition: implicit learning rt', '0.08'),
+ (46, '-2.14', 'TS conflict effect', '0.06')]
+
