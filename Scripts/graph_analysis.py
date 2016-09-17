@@ -57,6 +57,12 @@ def pairwise_MI(data):
         MI_df.loc[c1,c2] = MI
         MI_df.loc[c2,c1] = MI
     return MI_df.astype(float)
+
+def threshold_proportional_sign(W, threshold):
+    sign = np.sign(W)
+    thresh_W = bct.threshold_proportional(np.abs(W), threshold)
+    W = thresh_W * sign
+    return W
     
 # Visualization
 def get_visual_style(G,  layout = 'kk', vertex_size = None, size = 1000, labels = None):
@@ -116,7 +122,11 @@ def get_visual_style(G,  layout = 'kk', vertex_size = None, size = 1000, labels 
                     'bbox': (size,size),
                     'margin': size/20.0}
     if 'weight' in G.es.attribute_names():
-        visual_style['edge_width'] = [w*4 for w in G.es['weight']]
+        visual_style['edge_width'] = [abs(w)*size/200.0 if abs(w) > .125 else 0 for w in G.es['weight']]
+        if np.sum([e<0 for e in G.es['weight']]) > 0:
+            visual_style['edge_color'] = [['#3399FF','#202020','#FF6666'][int(np.sign(w)+1)] for w in G.es['weight']]
+        else:
+            visual_style['edge_color'] = '#202020'
     if vertex_size:
         visual_style['vertex_size'] = [c*(size/20.0)+(size/50.0) for c in G.vs[vertex_size]]
     if labels:
@@ -167,7 +177,7 @@ def print_community_members(G, lookup = {}, file = None):
         print('', file = f)
         
 # Main graph analysis function
-def Graph_Analysis(data, edge_metric = 'pearson', threshold = .3, weight = True, reorder = True, display = True, layout = 'kk', **kwargs):
+def Graph_Analysis(data, thresh_func = bct.threshold_proportional, community_alg = bct.community_louvain, edge_metric = 'pearson', threshold = .3, weight = True, reorder = True, display = True, layout = 'kk', **kwargs):
     """
     Creates and displays graphs of a data matrix.
     
@@ -175,6 +185,13 @@ def Graph_Analysis(data, edge_metric = 'pearson', threshold = .3, weight = True,
     ----------
     data: pandas DataFrame
         data to use to create the graph
+    thresh_func: function that takes in a connectivity matrix and thresholds
+        any algorithm that returns a connectivity matrix of the same size as the original may be used.
+        intended to be used with bct.threshold_proportional or bct.threshold_absolute
+    community_alg: function that takes in a connectivity matrix and returns community assignment
+        intended to use algorithms from brain connectivity toolbox like commnity_louvain or 
+        modularity_und. Must return a list of community assignments followed by Q, the modularity
+        index
     edge_metric: str: 'pearson', 'separman' or 'MI'
         relationship metric between nodes. MI stands for mutual information. "abs_"
         may be used in front of "pearson" or "spearman" to get the absolute value
@@ -209,12 +226,10 @@ def Graph_Analysis(data, edge_metric = 'pearson', threshold = .3, weight = True,
             connectivity_matrix = abs(data.corr(method = edge_metric)).as_matrix()
         else:
             connectivity_matrix = data.corr(method = edge_metric).as_matrix()
-        
-    # remove diagnoal (required by bct) and uppder triangle
-    np.fill_diagonal(connectivity_matrix,0)
+            
+    #threshold and remove diagonal
+    graph_mat = thresh_func(connectivity_matrix,threshold)
     
-    #threshold
-    graph_mat = bct.threshold_proportional(connectivity_matrix,threshold)
     # make a binary version if not weighted
     if not weight:
         graph_mat = np.ceil(graph_mat)
@@ -225,7 +240,7 @@ def Graph_Analysis(data, edge_metric = 'pearson', threshold = .3, weight = True,
     # community detection
     # using louvain but also bct.modularity_und which is "Newman's spectral community detection"
     # bct.modularity_louvain_und_sign
-    comm, mod = bct.community_louvain(graph_mat)
+    comm, mod = community_alg(graph_mat)
     
     #if reorder, reorder vertices by community membership
     if reorder:
@@ -235,7 +250,7 @@ def Graph_Analysis(data, edge_metric = 'pearson', threshold = .3, weight = True,
         # reorder community in line with reordering of data
         comm = np.sort(comm)
         #threshold
-        graph_mat = bct.threshold_proportional(connectivity_matrix,threshold)
+        graph_mat = thresh_func(connectivity_matrix,threshold)
         # make a binary version if not weighted
         if not weight:
             graph_mat = np.ceil(graph_mat)
@@ -253,6 +268,7 @@ def Graph_Analysis(data, edge_metric = 'pearson', threshold = .3, weight = True,
     else:
         G.vs['eigen_centrality'] = G.eigenvector_centrality(directed = False)
     
+    visual_style = {}
     if display:
         # plot community structure
         visual_style = get_visual_style(G, layout = layout, vertex_size = 'eigen_centrality', size = 1000)
@@ -265,7 +281,7 @@ def Graph_Analysis(data, edge_metric = 'pearson', threshold = .3, weight = True,
             print_target = None
         print_community_members(G, lookup = verbose_lookup, file = print_target)
         plot_graph(G, visual_style = visual_style, **kwargs)
-    return (G, graph_mat, visual_style['layout'])
+    return (G, graph_mat, visual_style)
     
 #**********************************
 # Load Data
@@ -289,10 +305,13 @@ corr_data.drop(['ptid','gender','age'], axis=1, inplace=True)
 #**********************************
 # Binary Analysis
 #**********************************
-G_bin, connectivity_adj = Graph_Analysis(corr_data, weight = False, layout = 'kk', inline = False)
-G_bin, connectivity_adj = Graph_Analysis(corr_data, edge_metric = 'spearman', threshold = .3, weight = False, inline = False)
-G_bin, connectivity_adj = Graph_Analysis(corr_data, edge_metric = 'abs_spearman', threshold = .3, weight = False, inline = False)
-
+t = .3
+#edge metric
+em = 'spearman'
+#community algorithm
+c_a = bct.community_louvain
+G_bin, connectivity_adj, visual_style = Graph_Analysis(corr_data, community_alg = c_a, edge_metric = em,
+                                                       threshold = t, weight = False, layout = 'kk', inline = False)
 Sigma, Gamma, Lambda = calc_small_world(G)
 
 
@@ -307,18 +326,26 @@ provinicial_hubs = G.vs.select(lambda v: v['hub'] == True and v['part_coef'] <= 
 
 #**********************************
 # Weighted Analysis
-#**********************************    
-G_w, connectivity_mat = Graph_Analysis(corr_data, threshold = .28, weight = True, reorder = True)
-Sigma, Gamma, Lambda = calc_small_world(G)
+#**********************************   
+#threshold and thresh_Func
+t = .9
+t_f = threshold_proportional_sign
+#edge metric
+em = 'spearman'
+#community algorithm
+gamma = 1
+c_a = lambda x: bct.modularity_louvain_und_sign(x, gamma = gamma)
+G_w, connectivity_adj, visual_style = Graph_Analysis(corr_data, community_alg = c_a, thresh_func = t_f, edge_metric = em, 
+                                                     reorder = True, threshold = t, weight = True, layout = 'circle', inline = False)
+                                                     
+Sigma, Gamma, Lambda = calc_small_world(G_w)
 
 #**********************************
 # Save Graphs
 #**********************************
 for metric in ['pearson','spearman','abs_pearson','abs_spearman','MI']:
-    G_bin, connectivity_adj = Graph_Analysis(corr_data, edge_metric = metric, weight = False, reorder = False, layout = 'kk', target = '../Plots/binary_' + metric)
-    G_weight, connectivity_adj = Graph_Analysis(corr_data, edge_metric = metric, weight = True, reorder = False, layout = 'kk', target = '../Plots/weighted_' + metric)
-
-
+    G_bin, connectivity_adj, visual_style = Graph_Analysis(corr_data, edge_metric = metric, weight = False, reorder = False, layout = 'kk', target = '../Plots/binary_' + metric)
+    G_weight, connectivity_adj, visual_style = Graph_Analysis(corr_data, edge_metric = metric, weight = True, reorder = False, layout = 'kk', target = '../Plots/weighted_' + metric)
 
 
 #**********************************
@@ -341,13 +368,13 @@ for t in thresholds:
     
 
 plt.figure(figsize = (16,12))
-sns.stripplot(x = zip(*cluster_size)[0], y = zip(*cluster_size)[1], jitter = .4)
+sns.stripplot(x = list(zip(*cluster_size))[0], y = list(zip(*cluster_size))[1], jitter = .4)
 plt.ylabel('Number of detected communities', size = 20)
 plt.xlabel('Threshold', size = 20)
 
 plt.figure(figsize = (16,12))
 #sns.stripplot(x = zip(*partition_distances)[0], y = zip(*partition_distances)[1], jitter = .2)
-sns.boxplot(x = zip(*partition_distances)[0], y = zip(*partition_distances)[1])
+sns.boxplot(x = list(zip(*partition_distances))[0], y = list(zip(*partition_distances))[1])
 plt.ylabel('Partition distance over 100 repetitions', size = 20)
 plt.xlabel('Threshold', size = 20)
 
