@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import bct
 import pickle
-from util import calc_small_world, community_reorder, get_subgraph, Graph_Analysis, plot_graph, threshold_proportional_sign
+from util import calc_small_world, community_reorder, get_subgraph, get_visual_style, \
+            Graph_Analysis, plot_graph, print_community_members, \
+            threshold_proportional_sign
     
-    
-
     
 #**********************************
 # Load Data
@@ -25,17 +25,7 @@ corr_data = data.copy()
 corr_data.drop(['ptid','gender','age'], axis=1, inplace=True)
 
 
-#**********************************
-# Binary Analysis
-#**********************************
-t = .3
-#edge metric
-em = 'spearman'
-#community algorithm
-c_a = bct.community_louvain
-G_bin, connectivity_adj, visual_style = Graph_Analysis(corr_data, community_alg = c_a, edge_metric = em,
-                                                       threshold = t, weight = False, layout = 'kk', inline = False)
-Sigma, Gamma, Lambda = calc_small_world(G)
+
 
 
 
@@ -49,20 +39,35 @@ provinicial_hubs = G.vs.select(lambda v: v['hub'] == True and v['part_coef'] <= 
 
 #**********************************
 # Weighted Analysis
-#**********************************   
-#threshold and thresh_Func
-t = .9
-t_f = threshold_proportional
-#edge metric
-em = 'spearman'
-#community algorithm
-gamma = 1
-c_a = lambda x: bct.modularity_louvain_und_sign(x, gamma = gamma)
+#**********************************  
+method = 'positive'
+if method == 'signed': 
+    #threshold and thresh_Func
+    t = 1
+    t_f = threshold_proportional_sign
+    #edge metric
+    em = 'spearman'
+    #community algorithm
+    gamma = 1
+    c_a = lambda x: bct.modularity_louvain_und_sign(x, gamma = gamma)
+elif method == 'positive':
+    #threshold and thresh_Func
+    t = .3
+    t_f = bct.threshold_proportional
+    #edge metric
+    em = 'spearman'
+    #community algorithm
+    gamma = 1
+    c_a = lambda x: bct.modularity_louvain_und(x, gamma = gamma)
+    
 G_w, connectivity_adj, visual_style = Graph_Analysis(corr_data, community_alg = c_a, thresh_func = t_f, edge_metric = em, 
                                                      reorder = True, threshold = t, weight = True, layout = 'circle', 
                                                      print_options = {'lookup': verbose_lookup}, plot_options = {'inline': False})
 
-plot_graph(community_reorder(get_subgraph(G_w,1)), layout = 'circle')
+subgraph = community_reorder(get_subgraph(G_w,2))
+print_community_members(subgraph)
+subgraph_visual_style = get_visual_style(subgraph, vertex_size = 'eigen_centrality')
+plot_graph(subgraph, visual_style = subgraph_visual_style, layout = 'circle', inline = False)
 
 #subgraph analysis                                            
 Sigma, Gamma, Lambda = calc_small_world(G_w)
@@ -80,6 +85,19 @@ for metric in ['pearson','spearman','abs_pearson','abs_spearman','MI']:
                                                               reorder = False, layout = layout, 
                                                               print_options = {'lookup': verbose_lookup, 'file': '../Plots/weighted_' + metric + '.txt'},
                                                               plot_options = {'inline': False, 'target': '../Plots/weighted_' + metric + '.pdf'})
+
+
+#**********************************
+# Binary Analysis
+#**********************************
+t = .3
+#edge metric
+em = 'spearman'
+#community algorithm
+c_a = bct.community_louvain
+G_bin, connectivity_adj, visual_style = Graph_Analysis(corr_data, community_alg = c_a, edge_metric = em,
+                                                       threshold = t, weight = False, layout = 'kk', inline = False)
+Sigma, Gamma, Lambda = calc_small_world(G)
 
 
 #**********************************

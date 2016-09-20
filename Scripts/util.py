@@ -128,7 +128,8 @@ def get_visual_style(G,  layout = 'kk', vertex_size = None, size = 1000, labels 
                     'bbox': (size,size),
                     'margin': size/20.0}
     if 'weight' in G.es.attribute_names():
-        visual_style['edge_width'] = [abs(w)*size/200.0 if abs(w) > .125 else 0 for w in G.es['weight']]
+        edge_threshold = 0
+        visual_style['edge_width'] = [abs(w)**1.4*size/200.0 if abs(w) > edge_threshold else 0 for w in G.es['weight']]
         if np.sum([e<0 for e in G.es['weight']]) > 0:
             visual_style['edge_color'] = [['#3399FF','#202020','#FF6666'][int(np.sign(w)+1)] for w in G.es['weight']]
         else:
@@ -137,6 +138,8 @@ def get_visual_style(G,  layout = 'kk', vertex_size = None, size = 1000, labels 
         visual_style['vertex_size'] = [c*(size/20.0)+(size/50.0) for c in G.vs[vertex_size]]
     if labels:
         visual_style['vertex_label'] = labels
+    elif 'id' in G.vs.attribute_names():
+        visual_style['vertex_label'] = G.vs['id']
     else:
         visual_style['vertex_label'] = range(len(G.vs))
     
@@ -224,7 +227,7 @@ def subgraph_analysis(G, community_alg = None):
         'Graph must have "community" and "id" as a vertex attributes'
     for c in np.unique(G.vs['community']):
         subgraph = G.induced_subgraph([v for v in G.vs if v['community'] == c])
-        subgraph_mat = graph_to_matrix(G)
+        subgraph_mat = graph_to_matrix(subgraph)
         if 'weight' in G.es.attribute_names():
             subgraph.vs['eigen_centrality'] = subgraph.eigenvector_centrality(directed = False, weights = subgraph.es['weight'])
         else:
